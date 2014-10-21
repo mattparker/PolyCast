@@ -11,25 +11,29 @@ if (!defined("PHP_INT_MIN")) {
  * @param mixed $val
  * @return int
  */
-function to_int($val)
+function to_int($val, $return = false)
 {
+    $return_fail = function ($v) use ($return) {
+        return $return;
+    };
+
     switch (gettype($val)) {
         case "integer":
             return $val;
         case "double":
-            return ($val === (float) (int) $val) ? (int) $val : false;
+            return ($val === (float) (int) $val) ? (int) $val : $return_fail($val);
         case "string":
             if (!preg_match("/^[+-]?[0-9]+$/", $val)) {
-                return false; // reject leading/trailing whitespace
+                return $return_fail($val); // reject leading/trailing whitespace
             }
 
             if ((float) $val > PHP_INT_MAX || (float) $val < PHP_INT_MIN) {
-                return false; // reject overflows
+                return $return_fail($val); // reject overflows
             }
 
             return (int) $val;
         default:
-            return false;
+            return $return_fail($val);
     }
 }
 

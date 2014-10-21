@@ -60,4 +60,10 @@ class ToIntTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(to_int((string) PHP_INT_MAX * 2));
         $this->assertFalse(to_int((string) PHP_INT_MIN * 2));
     }
+
+    public function testUserReturnValue()
+    {
+        $this->assertEquals(3, to_int(null, 3));
+
+    }
 }
