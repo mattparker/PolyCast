@@ -69,5 +69,14 @@ class ToIntTest extends PHPUnit_Framework_TestCase
     public function testUserReturnCallable() 
     {
         $this->assertEquals(42, to_int(null, function () {return 6*7;}));
+        $this->assertEquals(4, to_int([4], function ($rejected_value) { 
+            return $rejected_value[0];
+        }));
+    }
+
+    public function testFailWithException() 
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        to_int(null, new InvalidArgumentException("oops"));
     }
 }

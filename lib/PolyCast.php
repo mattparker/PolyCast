@@ -17,6 +17,9 @@ function to_int($val, $return = false)
         if (is_callable($return)) {
             return $return($v);
         }
+        if ($return instanceof Exception) { 
+            throw $return;
+        }
         return $return;
     };
 
