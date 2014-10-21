@@ -76,7 +76,7 @@ class ToIntTest extends PHPUnit_Framework_TestCase
 
     public function testFailWithException() 
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('InvalidArgumentException', 'oops');
         to_int(null, new InvalidArgumentException("oops"));
     }
 }
