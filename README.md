@@ -3,9 +3,42 @@
 [![Build Status](https://travis-ci.org/theodorejb/PolyCast.svg?branch=master)](https://travis-ci.org/theodorejb/PolyCast) [![Packagist Version](https://img.shields.io/packagist/v/theodorejb/polycast.svg)](https://packagist.org/packages/theodorejb/polycast) [![License](https://img.shields.io/packagist/l/theodorejb/polycast.svg)](LICENSE.md)
 
 Adds `to_int`, `to_float`, and `to_string` functions for safe, strict casting.
-The functions return `false` if a value cannot be safely cast.
 
-Based on https://github.com/php/php-src/pull/874.
+~~The functions return `false` if a value cannot be safely cast.~~
+The functions return `false` by default if a value cannot be safely cast.
+However, in this branch you can pass a second argument that will be returned 
+if the value cannot be safely cast.
+
+This return value can be just a value:
+
+```php
+
+$val = to_int($maybe_ok, 3);
+
+```
+
+If $maybe_ok can't be safely cast, $val will be 3.
+
+It can also be a Callable or an Exception:
+
+```php
+
+$val = to_int($maybe_ok, function ($rejected_value) {
+    return "Did NOT like $rejected_value";
+});
+
+$val2 = to_int($maybe_ok, new InvalidArgumentException("No. just no."));
+
+```
+
+And the Callable will be called, with the rejected value as the argument,
+or the Exception thrown (without modification).  Of course if you wanted
+you could pass a function that throws an Exception so that your
+Exception message could include the rejected value.
+
+
+
+(Amended but) Based on https://github.com/php/php-src/pull/874.
 An RFC proposing inclusion in PHP 7 was opened for discussion on 2014-10-20:
 https://wiki.php.net/rfc/safe_cast.
 
