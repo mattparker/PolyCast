@@ -85,8 +85,18 @@ function to_float($val, $return = false)
  * @param mixed $val
  * @return string
  */
-function to_string($val)
+function to_string($val, $return = false)
 {
+    $return_fail = function ($v) use ($return) {
+        if (is_callable($return)) {
+            return $return($v);
+        }
+        if ($return instanceof Exception) {
+            throw $return;
+        }
+        return $return;
+    };
+
     switch (gettype($val)) {
         case "string":
             return $val;
@@ -97,9 +107,9 @@ function to_string($val)
             if (method_exists($val, "__toString")) {
                 return $val->__toString();
             } else {
-                return false;
+                return $return_fail($val);
             }
         default:
-            return false;
+            return $return_fail($val);
     }
 }

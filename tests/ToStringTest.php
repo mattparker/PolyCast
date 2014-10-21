@@ -27,6 +27,27 @@ class ToStringTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(to_string(new NotStringable()));
         $this->assertSame("foobar", to_string(new Stringable()));
     }
+
+    public function testUserReturnValue()
+    {
+        $this->assertEquals(3, to_string(null, 3));
+        $this->assertSame(3, to_string(new NotStringable(), 3));
+    }
+
+    public function testUserReturnCallable()
+    {
+        $this->assertEquals(42, to_string(null, function () {return 6*7;}));
+        $this->assertEquals(4, to_string([4], function ($rejected_value) {
+            return $rejected_value[0];
+        }));
+    }
+
+    public function testFailWithException()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'oops');
+        to_string(null, new InvalidArgumentException("oops"));
+    }
+
 }
 
 class NotStringable {}
