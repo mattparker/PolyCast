@@ -46,11 +46,16 @@ function to_float($val)
         case "integer":
             return (float) $val;
         case "string":
-            if (preg_match("/^\s/", $val) || preg_match("/\s$/", $val)) {
-                return false; // reject leading/trailing whitespace
+            // validation based on http://php.net/manual/en/language.types.float.php
+            $lnum    = "[0-9]+";
+            $dnum    = "([0-9]*[\.]{$lnum})|({$lnum}[\.][0-9]*)";
+            $expDnum = "/^[+-]?(({$lnum}|{$dnum})[eE][+-]?{$lnum})$/";
+
+            if (!(preg_match("/^[+-]?{$lnum}$/", $val) || preg_match("/^[+-]?{$dnum}$/", $val) || preg_match($expDnum, $val))) {
+                return false;
             }
 
-            return filter_var($val, FILTER_VALIDATE_FLOAT);
+            return (float) $val;
         default:
             return false;
     }
