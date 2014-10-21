@@ -81,5 +81,12 @@ class ToFloatTest extends PHPUnit_Framework_TestCase
         $this->assertSame("Reject 0x10", to_float("0x10", function ($v){return "Reject $v";}));
     }
 
+    public function testReturnException() 
+    {
+       $this->setExpectedException("InvalidArgumentException", "oops");
+       to_float(null, new InvalidArgumentException("oops");
+    }
+    
+
 }
 
