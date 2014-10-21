@@ -64,6 +64,10 @@ class ToIntTest extends PHPUnit_Framework_TestCase
     public function testUserReturnValue()
     {
         $this->assertEquals(3, to_int(null, 3));
+    }
 
+    public function testUserReturnCallable() 
+    {
+        $this->assertEquals(42, to_int(null, function () {return 6*7;}));
     }
 }

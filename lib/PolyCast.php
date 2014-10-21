@@ -14,6 +14,9 @@ if (!defined("PHP_INT_MIN")) {
 function to_int($val, $return = false)
 {
     $return_fail = function ($v) use ($return) {
+        if (is_callable($return)) {
+            return $return($v);
+        }
         return $return;
     };
 
