@@ -48,8 +48,18 @@ function to_int($val, $return = false)
  * @param mixed $val
  * @return float
  */
-function to_float($val)
+function to_float($val, $return = false)
 {
+    $return_fail = function ($v) use ($return) {
+        if (is_callable($return)) {
+            return $return($v);
+        }
+        if ($return instanceof Exception) {
+            throw $return;
+        }
+        return $return;
+    };
+
     switch (gettype($val)) {
         case "double":
             return $val;
@@ -57,12 +67,16 @@ function to_float($val)
             return (float) $val;
         case "string":
             if (preg_match("/^\s/", $val) || preg_match("/\s$/", $val)) {
-                return false; // reject leading/trailing whitespace
+                return $return_fail($val); // reject leading/trailing whitespace
             }
 
-            return filter_var($val, FILTER_VALIDATE_FLOAT);
+             $ret = filter_var($val, FILTER_VALIDATE_FLOAT);
+             if ($ret === false) {
+                 return $return_fail($val);
+             }
+             return $ret;
         default:
-            return false;
+            return $return_fail($val);
     }
 }
 

@@ -63,4 +63,9 @@ class ToFloatTest extends PHPUnit_Framework_TestCase
         $this->assertSame(0.00075, to_float("75e-5"));
         $this->assertSame(310000000.0, to_float("31e+7"));
     }
+
+    public function testUserReturnSimpleValue()
+    {
+        $this->assertSame(4.3, to_float(null, 4.3));
+    }
 }
