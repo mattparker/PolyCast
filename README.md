@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/theodorejb/PolyCast.svg?branch=master)](https://travis-ci.org/theodorejb/PolyCast) [![Packagist Version](https://img.shields.io/packagist/v/theodorejb/polycast.svg)](https://packagist.org/packages/theodorejb/polycast) [![License](https://img.shields.io/packagist/l/theodorejb/polycast.svg)](LICENSE.md)
 
 Adds `to_int`, `to_float`, and `to_string` functions for safe, strict casting.
-The functions return `false` if a value cannot be safely cast.
+The functions throw an exception if a value cannot be safely cast.
 
 Based on https://github.com/php/php-src/pull/874.
 An RFC proposing inclusion in PHP 7 was opened for discussion on 2014-10-20:
@@ -27,27 +27,27 @@ in your application's bootstrap file.
 
 ## Examples
 
-Value      | `to_int()` | `to_float()` | `to_string()`
----------- | ---------- | ------------ | -------------
-`null`     | `false`    | `false`      | `false`
-`true`     | `false`    | `false`      | `false`
-`false`    | `false`    | `false`      | `false`
-`array`    | `false`    | `false`      | `false`
-resource   | `false`    | `false`      | `false`
-`stdClass` | `false`    | `false`      | `false`
-"10"       | 10         | 10.0         | "10"
-"-10"      | -10        | -10.0        | "-10"
-10.0       | 10         | 10.0         | "10"
-"10.0"     | `false`    | 10.0         | "10.0"
-1.5        | `false`    | 1.5          | "1.5"
-"1.5"      | `false`    | 1.5          | "1.5"
-"31e+7"    | `false`    | 310000000.0  | "31e+7"
-"75e-5"    | `false`    | 0.00075      | "75e-5"
-`INF`      | `false`    | `INF`        | "INF"
-`NAN`      | `false`    | `NAN`        | "NAN"
-"   10   " | `false`    | `false`      | "   10   "
-"10abc"    | `false`    | `false`      | "10abc"
-"abc10"    | `false`    | `false`      | "abc10"
+Value      | `to_int()`                 | `to_float()`                | `to_string()`
+---------- | -------------------------- | --------------------------- | --------------------------
+`null`     | `InvalidArgumentException` | `InvalidArgumentException`  | `InvalidArgumentException`
+`true`     | `InvalidArgumentException` | `InvalidArgumentException`  | `InvalidArgumentException`
+`false`    | `InvalidArgumentException` | `InvalidArgumentException`  | `InvalidArgumentException`
+`array`    | `InvalidArgumentException` | `InvalidArgumentException`  | `InvalidArgumentException`
+resource   | `InvalidArgumentException` | `InvalidArgumentException`  | `InvalidArgumentException`
+`stdClass` | `InvalidArgumentException` | `InvalidArgumentException`  | `InvalidArgumentException`
+"10"       | 10                         | 10.0                        | "10"
+"-10"      | -10                        | -10.0                       | "-10"
+10.0       | 10                         | 10.0                        | "10"
+"10.0"     | `InvalidArgumentException` | 10.0                        | "10.0"
+1.5        | `InvalidArgumentException` | 1.5                         | "1.5"
+"1.5"      | `InvalidArgumentException` | 1.5                         | "1.5"
+"31e+7"    | `InvalidArgumentException` | 310000000.0                 | "31e+7"
+"75e-5"    | `InvalidArgumentException` | 0.00075                     | "75e-5"
+`INF`      | `OverflowException`        | `INF`                       | "INF"
+`NAN`      | `InvalidArgumentException` | `NAN`                       | "NAN"
+"   10   " | `InvalidArgumentException` | `InvalidArgumentException`  | "   10   "
+"10abc"    | `InvalidArgumentException` | `InvalidArgumentException`  | "10abc"
+"abc10"    | `InvalidArgumentException` | `InvalidArgumentException`  | "abc10"
 
 ### Support for `__toString()`
 
@@ -59,7 +59,7 @@ class Stringable {
     }
 }
 
-to_string(new NotStringable()); // false
+to_string(new NotStringable()); // InvalidArgumentException
 to_string(new Stringable());    // "foobar"
 ```
 
