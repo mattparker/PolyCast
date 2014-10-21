@@ -67,5 +67,19 @@ class ToFloatTest extends PHPUnit_Framework_TestCase
     public function testUserReturnSimpleValue()
     {
         $this->assertSame(4.3, to_float(null, 4.3));
+        $this->assertSame(4.3, to_float("0x10", 4.3));
+        $this->assertSame(4.3, to_float(true, 4.3));
+        $this->assertSame(4.3, to_float(false, 4.3));
+        $this->assertSame(4.3, to_float(new stdClass(), 4.3));
+        $this->assertSame(4.3, to_float(fopen("data:text/html,foobar", "r"), 4.3));
+        $this->assertSame(4.3, to_float([], 4.3));
+
     }
+
+    public function testCallableReturnValue()
+    {
+        $this->assertSame("Reject 0x10", to_float("0x10", function ($v){return "Reject $v";}));
+    }
+
 }
+
