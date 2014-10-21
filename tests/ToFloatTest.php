@@ -84,7 +84,7 @@ class ToFloatTest extends PHPUnit_Framework_TestCase
     public function testReturnException() 
     {
        $this->setExpectedException("InvalidArgumentException", "oops");
-       to_float(null, new InvalidArgumentException("oops");
+       to_float(null, new InvalidArgumentException("oops"));
     }
     
 
